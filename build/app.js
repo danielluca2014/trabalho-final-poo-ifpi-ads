@@ -14,11 +14,11 @@ let d = new renainf_1.DepartamentoDeTransito();
 let opcao = '';
 do {
     try {
-        console.log("\nAplicação iniciada...\n");
+        console.log(chalk.blue("\nAplicação iniciada...\n"));
         console.log("Bem vindo!\nDigite uma opção:\n");
         console.log('1 - Cadastro de Infratores     2 - Registrar Infrações     3 - Consultar infrações\n' +
             '4 - Excluir     5 - Listar infratores     6 - Carregar informações     7 - Salvar informações\n' +
-            '\n0 - Sair\n');
+            chalk.red('\n0 - Sair\n'));
         opcao = input("Opção: ");
         switch (opcao) {
             case "1":
@@ -53,7 +53,7 @@ do {
 console.log("Aplicação encerrada.");
 function inserir() {
     try {
-        console.log("\nCadastrar infratores:\n");
+        console.log(chalk.blue("\nCadastrar infratores:\n"));
         let id = input("ID: ");
         let cpf = input("CPF: ");
         let nome = input("Nome: ");
@@ -64,13 +64,13 @@ function inserir() {
     }
     catch (e) {
         if (e instanceof excecoes_1.InfratorJaCadastradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
     }
 }
 function registrarInfracoes() {
     try {
-        console.log("\nRegistrar Infrações:\n");
+        console.log(chalk.blue("\nRegistrar Infrações:\n"));
         let id_infrator = input("ID do infrator: ");
         let indiceProcurado = d.consultarPorIndice(id_infrator);
         console.log("\nDigite as informações da infração:\n");
@@ -80,7 +80,7 @@ function registrarInfracoes() {
         let infracao;
         infracao = new renainf_1.Infracao(id, descricao, multa);
         d.infratores[indiceProcurado].inserir(infracao);
-        console.log("\nInformações registradas com sucesso.");
+        console.log(chalk.green("\nInformações registradas com sucesso."));
         /* let indiceProcurado: number = -1;
     
         for (let i = 0; i < d.infratores.length; i++) {
@@ -92,27 +92,27 @@ function registrarInfracoes() {
     }
     catch (e) {
         if (e instanceof excecoes_1.InfratorNaoEncontradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
         if (e instanceof excecoes_1.InfracaoJaCadastradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
         if (e instanceof excecoes_1.ValorInvalidoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
     }
 }
 function excluir() {
     try {
-        console.log("\nExcluir infratores:\n");
+        console.log(chalk.blue("\nExcluir infratores:\n"));
         let id = input('ID do infrator: ');
         d.consultarPorIndice(id);
         d.excluir(id);
-        console.log("\nInformações excluídas com sucesso.");
+        console.log(chalk.green("\nInformações excluídas com sucesso."));
     }
     catch (e) {
         if (e instanceof excecoes_1.InfratorNaoEncontradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
     }
 }
@@ -136,28 +136,28 @@ function carregarDeArquivo() {
                 infrator.inserir(infracao);
             }
             d.inserir(infrator);
-            console.log(`\nID ${infrator.id} carregado.`);
+            console.log(chalk.green(`\nID ${infrator.id} carregado.`));
         }
     }
     catch (e) {
-        throw new excecoes_1.ArquivoError('\nFalha ao ler o arquivo.');
+        throw new excecoes_1.ArquivoError(chalk.red('\nFalha ao ler o arquivo.'));
     }
 }
 function listarInfratores() {
     if (d.infratores.length == 0) {
-        console.log("\nCadastro de infratores vazios.");
+        console.log(chalk.red("\nCadastro de infratores vazios."));
     }
     console.log(d.listaInfratores());
 }
 function listarInfracoes() {
     try {
-        let id_infrator = input("ID do infrator: ");
+        let id_infrator = input("\nID do infrator: ");
         let indiceProcurado = d.consultarPorIndice(id_infrator);
         console.log(d.infratores[indiceProcurado].listaInfracoes());
     }
     catch (e) {
         if (e instanceof excecoes_1.InfratorNaoEncontradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
     }
 }
@@ -167,7 +167,7 @@ function salvarEmArquivo() {
     transformStream.pipe(outputStream);
     d.infratores.forEach(transformStream.write);
     transformStream.end();
-    console.log("\nInformações salvas com sucesso.");
+    console.log(chalk.green("\nInformações salvas com sucesso."));
     outputStream.on("finish", function handleFinish() {
         console.log("- - - - - - - - - - - - - - - - - - - - - - -");
     });
@@ -177,7 +177,7 @@ function salvarEmArquivo() {
         inputStream
             .pipe(transformStream)
             .on("data", function handleRecord(data) {
-            console.log(chalk.red("Arquivos salvos:"), data);
+            console.log(chalk.green("Arquivos salvos:"), data);
         })
             .on("end", function handleEnd() {
             console.log("- - - - - - - - - - - - - - - - - - - - - - -");

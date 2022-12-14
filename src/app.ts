@@ -13,12 +13,12 @@ let opcao: string = '';
 
 do {
     try {
-        console.log("\nAplicação iniciada...\n");
+        console.log(chalk.blue("\nAplicação iniciada...\n"));
         console.log("Bem vindo!\nDigite uma opção:\n");
 
         console.log('1 - Cadastro de Infratores     2 - Registrar Infrações     3 - Consultar infrações\n' +
             '4 - Excluir     5 - Listar infratores     6 - Carregar informações     7 - Salvar informações\n' + 
-            '\n0 - Sair\n');
+            chalk.red('\n0 - Sair\n'));
 
         opcao = input("Opção: ");
 
@@ -59,9 +59,8 @@ console.log("Aplicação encerrada.");
 
 function inserir(): void {
     try {
-        console.log("\nCadastrar infratores:\n");
+        console.log(chalk.blue("\nCadastrar infratores:\n"));
         let id: string = input("ID: ");
-
         let cpf: string = input("CPF: ");
         let nome: string = input("Nome: ");
         let sobrenome: string = input("Sobrenome: ")
@@ -73,14 +72,14 @@ function inserir(): void {
     
     } catch (e: any) {
         if (e instanceof InfratorJaCadastradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
     }
 }
 
 function registrarInfracoes() {
     try {
-        console.log("\nRegistrar Infrações:\n");
+        console.log(chalk.blue("\nRegistrar Infrações:\n"));
 
         let id_infrator: string = input("ID do infrator: ");
 
@@ -96,7 +95,7 @@ function registrarInfracoes() {
         infracao = new Infracao(id, descricao, multa);
 
         d.infratores[indiceProcurado].inserir(infracao);
-        console.log("\nInformações registradas com sucesso.");
+        console.log(chalk.green("\nInformações registradas com sucesso."));
         
         /* let indiceProcurado: number = -1;   
     
@@ -109,31 +108,31 @@ function registrarInfracoes() {
     
     } catch (e: any) {
         if (e instanceof InfratorNaoEncontradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
 
         if (e instanceof InfracaoJaCadastradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
 
         if (e instanceof ValorInvalidoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
     }
 }
 
 function excluir() {
     try {
-        console.log("\nExcluir infratores:\n");
+        console.log(chalk.blue("\nExcluir infratores:\n"));
         let id: string = input('ID do infrator: ');
         d.consultarPorIndice(id);
         d.excluir(id);
 
-        console.log("\nInformações excluídas com sucesso.");
+        console.log(chalk.green("\nInformações excluídas com sucesso."));
 
     } catch (e: any) {
         if (e instanceof InfratorNaoEncontradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
     }
 }
@@ -165,17 +164,17 @@ function carregarDeArquivo() {
             }
 
             d.inserir(infrator);
-            console.log(`\nID ${infrator.id} carregado.`);
+            console.log(chalk.green(`\nID ${infrator.id} carregado.`));
         }
 
     } catch (e: any) {
-        throw new ArquivoError('\nFalha ao ler o arquivo.');
+        throw new ArquivoError(chalk.red('\nFalha ao ler o arquivo.'));
     }
 }
 
 function listarInfratores() {
     if (d.infratores.length == 0) {
-        console.log("\nCadastro de infratores vazios.");
+        console.log(chalk.red("\nCadastro de infratores vazios."));
     }
 
     console.log(d.listaInfratores());
@@ -183,7 +182,7 @@ function listarInfratores() {
 
 function listarInfracoes() {
     try {
-        let id_infrator: string = input("ID do infrator: ");
+        let id_infrator: string = input("\nID do infrator: ");
 
         let indiceProcurado: number = d.consultarPorIndice(id_infrator);
     
@@ -191,7 +190,7 @@ function listarInfracoes() {
 
     } catch (e: any) {
         if (e instanceof InfratorNaoEncontradoError) {
-            console.log(e.message);
+            console.log(chalk.red(e.message));
         }
     }
 }
@@ -204,7 +203,7 @@ function salvarEmArquivo() {
     d.infratores.forEach(transformStream.write);
     transformStream.end();
 
-    console.log("\nInformações salvas com sucesso.");
+    console.log(chalk.green("\nInformações salvas com sucesso."));
 
     outputStream.on(
         "finish",
@@ -225,7 +224,7 @@ function salvarEmArquivo() {
                 .on(
                     "data",
                     function handleRecord( data: any ) {
-                        console.log( chalk.red( "Arquivos salvos:" ), data );
+                        console.log(chalk.green( "Arquivos salvos:" ), data );
                     }
                 )
     
